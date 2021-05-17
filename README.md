@@ -1,1 +1,2 @@
-# Codigo-backend-virtual-06
+# Instrucciones para manejar las ramas
+Aqui las instrucciones
