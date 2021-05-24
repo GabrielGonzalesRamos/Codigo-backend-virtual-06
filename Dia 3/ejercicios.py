@@ -1,3 +1,74 @@
+
+
+def MakeRectangle():
+
+    h = int(input('Ingrese la altura del cuadrado : ')) 
+    b = int(input('Ingrese la base del cuadrado : ')) 
+    for j in range(h):
+        print(" ")  
+        for i in range(b):
+          print(end="* ")
+        print(" ")  
+
+
+def MakeTriangle():
+    h = int(input('Ingrese la altura del triangulo : '))
+    h += 1
+    for i in range(h):
+        h -= 1
+        print("\n")
+        if h > 0:
+            for j in range(h):
+                print(end="* ")
+
+
+def Collatz():
+    c = int(input('Ingrese un número : '))
+    l = [c]
+    for j in l:
+        if l[-1] != 1:
+            if l[-1] % 2 == 0:
+                p = int(l[-1] / 2)
+                l.append(p)
+            else:
+                i = int(( l[-1] * 3 ) + 1)
+                l.append(i)
+    print(l)     
+
+
+
+print("*********************")
+print("*********************")
+print("a . Hacer un réctangulo")
+print("b . Hacer un octágono")
+print("c . Hacer un triangulo")
+print("d . Serie de Collatz")
+print("e . Salir")
+print("*********************")
+print("*********************")
+
+
+o = input("Ingrese una opcción: ")
+if o == "a":
+    MakeRectangle()
+elif o == "b":
+    print("a")
+elif o == "c":
+    MakeTriangle()
+elif o == "d":
+    Collatz()
+elif o == "e":
+    print("Saliendo")    
+    exit()
+else :
+    print("Opccion erronea, saliendo")    
+    exit()
+
+
+
+
+
+
 # ejemplo:
 # Para evitar que en cada impresion se ejecute en una nueva linea, se puede agregar el parametro end y este indicara como queremos que actue 
 #al finalizar la linea, su valor por defecto es \n, pero si le cambiamos a * entonces, al finalizar la impresion, colocara un asterisco en vez de un salto de linea
@@ -15,18 +86,8 @@
 # ****
 # ****
 
-
-def MakeRectangle():
-
-    h = int(input('Ingrese la altura del cuadrado : ')) 
-    b = int(input('Ingrese la base del cuadrado : ')) 
-    for j in range(h):
-        print(" ")  
-        for i in range(b):
-          print(end="* ")
-        print(" ")  
         
-MakeRectangle()
+
 
 
 
@@ -41,14 +102,16 @@ MakeRectangle()
 #     *********
 #    ***********
 #   *************
+#   ************* -
 #   *************
-#   *************
-#   *************
+#   ************* -
 #   *************
 #    ***********
 #     *********
 #      *******
 #       *****
+
+
 
 
 
@@ -63,16 +126,7 @@ MakeRectangle()
 # **
 # *
 
-def MakeTriangle():
-    h = int(input('Ingrese la altura del triangulo : '))
-    h += 1
-    for i in range(h):
-        h -= 1
-        print("\n")
-        if h > 0:
-            for j in range(h):
-                print(end="* ")
-MakeTriangle()
+
 
 
 
@@ -90,20 +144,9 @@ MakeTriangle()
 # de escoger el ejercicio
 
 
-def Collatz():
-    c = int(input('Ingrese un número : '))
-    l = [c]
-    for j in l:
-        if l[-1] != 1:
-            if l[-1] % 2 == 0:
-                p = int(l[-1] / 2)
-                l.append(p)
-            else:
-                i = int(( l[-1] * 3 ) + 1)
-                l.append(i)
-    print(l)        
+   
 
-Collatz()
+
 
 
 
