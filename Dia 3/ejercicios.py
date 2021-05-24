@@ -5,9 +5,8 @@ def MakeRectangle():
     h = int(input('Ingrese la altura del cuadrado : ')) 
     b = int(input('Ingrese la base del cuadrado : ')) 
     for j in range(h):
-        print(" ")  
         for i in range(b):
-          print(end="* ")
+          print('*', end='')
         print(" ")  
 
 
@@ -19,7 +18,7 @@ def MakeTriangle():
         print("\n")
         if h > 0:
             for j in range(h):
-                print(end="* ")
+                print('*', end='')
 
 
 def Collatz():
@@ -37,6 +36,23 @@ def Collatz():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 print("*********************")
 print("*********************")
 print("a . Hacer un réctangulo")
@@ -48,11 +64,18 @@ print("*********************")
 print("*********************")
 
 
+
+
+
+
+
+
+
 o = input("Ingrese una opcción: ")
 if o == "a":
     MakeRectangle()
 elif o == "b":
-    print("a")
+    print("b")
 elif o == "c":
     MakeTriangle()
 elif o == "d":
