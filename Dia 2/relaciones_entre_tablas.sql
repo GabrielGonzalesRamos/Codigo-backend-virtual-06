@@ -55,7 +55,15 @@ SELECT * FROM productos;
 INSERT INTO categorias (nombre, abbr, imagen) VALUE ("BEBES","BEB", "url5");
 INSERT INTO productos (nombre, precio, disponible) VALUES ("SANDALIAS BOB TORONJA", 19.90, true);
 
-SELECT * FROM categorias INNER JOIN productos ON categorias.id =  productos.categoria_id;
+#----------------------------
+# SELECIONAME TODOS LOS NOMBRES CUYO ALIAS SERÁ NOMBRE DEL PRODUCTO, PRECIOS Y DISPONIBILIDAD DE 
+# LA TABLA CATEGORIAS INTERSECCION CON LA TABLA PRODUCTOS CUANDO C.ID = P.CATEGORIA_ID NOMBRE  Y
+# DONDE NOMBRE  SEA IGUAL A ZAPATO
+SELECT c.nombre FROM categorias AS c INNER JOIN productos AS p ON c.id =  p.categoria_id
+WHERE c.nombre = 'ZAPATO';
+#----------------------------
+
+## INNER JOIN ES LO MISMO QUE JOIN
 SELECT * FROM categorias LEFT JOIN productos ON categorias.id =  productos.categoria_id;
 SELECT * FROM categorias RIGHT JOIN productos ON categorias.id =  productos.categoria_id;
 
