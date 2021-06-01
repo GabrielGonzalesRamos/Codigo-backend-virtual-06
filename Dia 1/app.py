@@ -9,7 +9,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("DATABASE_URI")
 @app.route("/")
 def initial_controller():
     return {
-        "message": "Welcome  API :cake:" 
+        "message": "Welcome  API 🧁" 
     }
 
 if __name__ == '__main__':
