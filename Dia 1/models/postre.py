@@ -34,3 +34,29 @@ class PostreModel(base_de_datos.Model):  # Esta clase será una tabla
     def __init__(self, nombre, porcion):
         self.postreNombre = nombre
         self.postrePorcion = porcion
+
+    def __str__(self):
+        return "El posrte es {}".format(self.postreNombre)     
+
+    def save(self):
+        # El metodo session.add crea un nueva sesion en la bd y ademas
+        # evita que se creen nuevas sesiones y asi relentizar la conexion a la bd
+        # el metodo add sirve para agregar toda la instancia actual (mi nuevo postre) y corroborar con 
+        # las columnas de la bd si todo esta correcto
+        # esto ademas crea una transaccion en la cual sirve para agrupar varias sentencias de insert,
+        # update, delete
+        base_de_datos.session.add(self)
+        # ahorta si todos los pasos de escritura, actualizacion y eliminacion de la db fueron exitosos
+        # entonces se guardarán todos los cambios de manera permanente
+        # todas las sesiones dentro de la misma instancia o entorno que esten pendiente de guardar
+        # PERMANENTE sus cambios en la bd al usar el commit se guardar de forma permanente
+        base_de_datos.session.commit()
+        # metodo que sirve para cerrar la session de la bd
+        #base_de_datos.session.close()
+
+    def json(self):
+        return {
+            "id": self.postreId,
+            "nombre": self.postreNombre,
+            "postrePorcion": self.postrePorcion
+        }
