@@ -1,7 +1,10 @@
 # Un controlador es el comportamiento que va a tener mi API
 # cuando se llame a determinada ruta
 # /postres GET  => mostrar los postres
+from operator import pos
 from os import name
+
+from sqlalchemy.orm import base
 from models.postre import PostreModel
 from flask_restful import Resource, reqparse
 from config.conexion_bd import base_de_datos
@@ -61,11 +64,63 @@ class PostreController(Resource):
     def get(self, id):
         
         #La documentacion nativa de SQLAlchemy
-        otro_postre = base_de_datos.session.query(PostreModel).filter(PostreModel.postreId == id).first()
-        otro_postre_2 = base_de_datos.session.query(PostreModel).filter_by(postreId = id).first()
+        #otro_postre = base_de_datos.session.query(PostreModel).filter(PostreModel.postreId == id).first()
+        postre = base_de_datos.session.query(PostreModel).filter_by(postreId = id).first()
         #La documentacion del flask sql alchemy
-        postre = PostreModel.query.filter_by(postreId = id).first()
+        #postre = PostreModel.query.filter_by(postreId = id).first()
+        
         print(postre)
-        print(otro_postre)
-        print(otro_postre_2)
-        return 'ok'
+        #print(otro_postre)
+        #print(otro_postre_2)
+        # verdadero if condicion else false
+        return ({
+            'success': True,
+            #'content': postre.json() if postre else 'no hay postre',
+            'content': postre.json(),
+            'message': None
+        }, 200)  if postre else ({
+            'success': False,
+            'content': None,
+            'message': 'Postre no encontrado'
+        }, 404)
+    
+    def put(self, id):
+        postre = base_de_datos.session.query(PostreModel).filter_by(postreId=id).first()
+        if postre:
+            data = serializerPostres.parse_args()
+            postre.postreNombre = data.get('nombre')
+            postre.postrePorcion = data.get('porcion')
+            postre.save()
+
+            return {
+                'succes': True,
+                'content': postre.json(),
+                'message': 'Postre actualizado correctamente'
+            }, 201
+        else:
+            return {
+                'succes': False,
+                'content': None,
+                'message': 'Postre no encontrado'
+            }, 404    
+
+    def delete(self, id):
+        #  Método 1 
+        # postre = base_de_datos.session.query(PostreModel).filter_by(postreId=id).delete()
+        # base_de_datos.session.commit()
+        # return {
+        #     'success': True,
+        #     'content': None,
+        #     'message': 'Postre eliminado exitosamente'
+        # }
+        # Método 2
+        postre = base_de_datos.session.query(PostreModel).filter_by(postreId=id).first()
+        postre.delete()
+        return {
+            'success': True,
+            'content': postre.json(),
+            'message': 'Postre eliminado exitosamente'
+        }
+
+
+
