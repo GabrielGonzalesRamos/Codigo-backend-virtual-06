@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from os import environ
 from config.conexion_bd import base_de_datos
 from flask_restful import Api
-from controllers.postre import PostresController, PostreController
+from controllers.postre import BusquedaPostre, PostresController, PostreController
 from models.postre import PostreModel
 from models.preparacion import PreparacionModel
 from models.ingrediente import IngredienteModel
@@ -41,6 +41,7 @@ def initial_controller():
 # DEFINO LAS RUTAS USANDO EL FLASK RESTFUL
 api.add_resource(PostresController, "/postres")
 api.add_resource(PostreController, "/postres/<int:id>")
+api.add_resource(BusquedaPostre, "/busqueda_postre")
 
 
 if __name__ == '__main__':

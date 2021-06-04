@@ -122,5 +122,40 @@ class PostreController(Resource):
             'message': 'Postre eliminado exitosamente'
         }
 
-
-
+# Resource hace que el def get():, def post():, def delete():
+class BusquedaPostre(Resource):
+    serializerBusqueda = reqparse.RequestParser()
+    serializerBusqueda.add_argument(
+        'nombre',
+        type=str,
+        location='args',
+        required=False
+    )
+    serializerBusqueda.add_argument(
+        'porcion',
+        type=str,
+        location='args',
+        choices=('Familiar', 'Personal', 'Mediano'),
+        help='Opcion inválida escoger [Familiar, Personal, Mediano]',
+        required=False
+    )
+    def get(self):
+        filtros = self.serializerBusqueda.parse_args()
+        if filtros.get('nombre') and filtros.get('porcion'):
+            resultado = base_de_datos.session.query(PostreModel).filter_by(postreNombre=filtros.get('nombre'), postrePorcion=filtros.get('porcion')).all()
+        elif filtros.get('nombre'):
+            resultado = base_de_datos.session.query(PostreModel).filter_by(postreNombre=filtros.get('nombre')).all()
+        elif filtros.get('porcion'):
+            resultado = base_de_datos.session.query(PostreModel).filter_by(postrePorcion=filtros.get('porcion')).all()  
+        else:
+            return {
+                'message': 'Necesitas dar al menos un parametro'
+            }, 400
+        postres = []
+        for postre in resultado:
+            postres.append(postre.json())
+        return {
+            'success': True,
+            'content': postres,
+            'message': "Exitoso"
+        }    
