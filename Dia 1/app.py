@@ -1,3 +1,4 @@
+from controllers.preparacion import PreparacionesController
 from flask import Flask, request
 from dotenv import load_dotenv
 from os import environ
@@ -8,6 +9,8 @@ from models.postre import PostreModel
 from models.preparacion import PreparacionModel
 from models.ingrediente import IngredienteModel
 from models.receta import RecetaModel
+from controllers.ingrediente import IngredienteController, IngredientesController
+
 load_dotenv()
 app = Flask(__name__)
 api = Api(app)
@@ -42,7 +45,9 @@ def initial_controller():
 api.add_resource(PostresController, "/postres")
 api.add_resource(PostreController, "/postres/<int:id>")
 api.add_resource(BusquedaPostre, "/busqueda_postre")
-
+api.add_resource(PreparacionesController, "/preparaciones", "/preparaciones/<int:postre_id>")
+api.add_resource(IngredientesController, "/ingredientes")
+api.add_resource(IngredienteController, "/ingredientes/<int:id>")
 
 if __name__ == '__main__':
     app.run(debug=True)
