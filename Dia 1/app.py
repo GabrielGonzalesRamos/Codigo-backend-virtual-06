@@ -10,9 +10,28 @@ from models.preparacion import PreparacionModel
 from models.ingrediente import IngredienteModel
 from models.receta import RecetaModel
 from controllers.ingrediente import IngredienteController, IngredientesController
+from flask_swagger_ui import get_swaggerui_blueprint
+
 
 load_dotenv()
+
+# Configuramos el SWAGGET EN EL FLASK
+
+SWAGGER_URL = "" #Indica en  que ruta se encuentra la doc
+API_URL = "/static/swagger.json" #Indica la ubicacion del archivo json
+swaggerui_blueprint = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        'app_name': "Reposteria Flask - Swagger Documentation"
+    }
+)
+# FIN DE LA CONFIGURACION
+
 app = Flask(__name__)
+# Sirve para registrar en el caso que nosotros tengamos un proyecto interno para agregarlo a un proyecto principal
+
+app.register_blueprint(swaggerui_blueprint)
 api = Api(app)
 # dialec
 print(environ.get("DATABASE_URI"))
