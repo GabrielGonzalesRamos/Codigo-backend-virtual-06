@@ -1,13 +1,16 @@
+from datetime import timedelta
+from controllers.movimiento import MovimientosController
 from flask import Flask, app, request
 from dotenv import load_dotenv
 from os import environ
 from config.conexion_bd import base_de_datos
 from flask_restful import Api
 from controllers.usuario import RegistroController
-from models.movimiento import MovimientoModel
+from controllers.movimiento import MovimientosController
 from models.sesion import SesionModel
 from flask_jwt import JWT
 from config.seguridad import autenticador, identificador
+from config.custom_jwt import manejo_error_JWT
 
 load_dotenv()
 
@@ -16,8 +19,20 @@ app = Flask(__name__)
 print(environ.get("DATABASE_URI"))
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("DATABASE_URI")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-jsonwebtoken = JWT(app=app, authentication_handler=autenticador, identity_handler=identificador)
+app.config['SECRET_KEY'] = 'claveSecreta'
+# Para modificar la fecha de caducidad de la token, su valor por defecto es 5 minutos
+#app.config['JWT_EXPIRATION_DELTA'] = timedelta(minutes=1, seconds=10)
+app.config['JWT_EXPIRATION_DELTA'] = timedelta(hours=1)
+# para modificar el endpoint del login
+app.config['JWT_AUTH_URL_RULE'] = '/login'
+# para modificar la llave del username 
+app.config['JWT_AUTH_USERNAME_KEY'] = 'correo'
+# para modificar la llave del password
+app.config['JWT_AUTH_PASSWORD_KEY'] = 'pass'
+jsonwebtoken = JWT(app=app, authentication_handler=autenticador, identity_handler=identificador) # El "autenticador" hace referencia al 
+# archivo config.seguridad y la funcion autenticador de la clase Usuario 
+# Manejo de error
+jsonwebtoken.jwt_error_callback = manejo_error_JWT
 
 
 base_de_datos.init_app(app)
@@ -25,6 +40,7 @@ base_de_datos.create_all(app=app)
 #base_de_datos.drop_all(app=app)
 api = Api(app)
 api.add_resource(RegistroController, "/registro")
+api.add_resource(MovimientosController, "/movimientos")
 
 
 

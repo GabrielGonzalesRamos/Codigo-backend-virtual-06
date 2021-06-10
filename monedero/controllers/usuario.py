@@ -2,7 +2,7 @@ from flask_restful import Resource, reqparse
 from sqlalchemy.sql import expression
 from sqlalchemy.exc import IntegrityError
 from models.usuario import UsuarioModel
-from re import search
+from re import fullmatch, search
 
 class RegistroController(Resource):
     serializer = reqparse.RequestParser(bundle_errors=True)
@@ -25,7 +25,7 @@ class RegistroController(Resource):
         nombre = data.get('nombre')
         apellido = data.get('apellido')
         password = data.get('password')
-        if search(patron_correo, correo) and search(patron_password, password):
+        if search(patron_correo, correo) and fullmatch(patron_password, password):
             try:
                 nuevoUsuario = UsuarioModel(nombre, apellido, correo, password)
                 nuevoUsuario.save()
@@ -45,5 +45,5 @@ class RegistroController(Resource):
             return {
                 "succes": True,
                 "content": None,
-                "message": "Contraseña no cumple con nuestra políticas"
+                "message": "Contraseña  o el Correo no cumple con nuestra políticas"
             }, 400

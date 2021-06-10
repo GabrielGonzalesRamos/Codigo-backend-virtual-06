@@ -14,9 +14,10 @@ class Usuario:
 def autenticador(username, password):
     """ Funcion encargada de validar las credenciales si estas son ingresadas correctamente"""
     if username and password:
-        usuario = base_de_datos.session.query(UsuarioModel).filter_by(usurioCorreo=username).first()
+        usuario = base_de_datos.session.query(UsuarioModel).filter_by(usuarioCorreo=username).first()
         if usuario:
-            if checkpw(bytes(password, 'utf-8'), usuario.usuarioPassword):
+            if checkpw(bytes(password, 'utf-8'), bytes(usuario.usuarioPassword, 'utf-8')):
+                print("Es el usuario")
                 return Usuario(usuario.usuarioId, usuario.usuarioCorreo)
             else:
                 print("La contraseña no coincide")
