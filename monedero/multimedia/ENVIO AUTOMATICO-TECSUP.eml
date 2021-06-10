@@ -1,0 +1,78 @@
+Delivered-To: jose.gabriel.gonzales.ramos@gmail.com
+Received: by 2002:ac9:7517:0:0:0:0:0 with SMTP id b23csp1508200ocs;
+        Fri, 4 Jun 2021 10:54:02 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxwIv2bbctXfDLhSMjmkknvsQk7iIjGtL75H2T7WiDCSx4+CcOmYS+Sx8d0hFN2/VwgaUZd
+X-Received: by 2002:a67:6605:: with SMTP id a5mr3997532vsc.38.1622829242706;
+        Fri, 04 Jun 2021 10:54:02 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1622829242; cv=none;
+        d=google.com; s=arc-20160816;
+        b=mZuA6axJUzTUb7MYySQi1hlbbaL+qxzVTxwAh3d5evtFHt3kXrs40gS6X0ijy5cl+p
+         sZqY5kLtjSEKJzi4Ke+pxsL3RrRaV9S5CDZaIcZJ7dQFZBt6ZtpsV/OhRipLhwu+qmEp
+         nQVKxY67gy+mp9jTu23/c7aeeP7rU+1f4UUkpQgpJiExJIEoPgI8PkCjStsqy8UOPs/C
+         eaRniOh8rh97Fsgf2DMJ7mxQ61oTuWlVRtdITvoodGZwF7aJIJPZzkGO2mEfP//evv6l
+         /ZRANu7CB+XQtqxdRt+muiggGF0ucY2u08XcNeF1RtrIjTWJ2vTZ/krLiJ8S3krMp8Yi
+         xGfg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=mime-version:subject:message-id:to:from:dkim-signature:date;
+        bh=4rgG2YUOygtiHhYQsys9haatW+CxCaj/K/XjHHeTP/g=;
+        b=DDW9C7f2Ayi0+at6DceGL0RyvZKglZGli1B+h6vFxR8PJxa7nMIPawVJhz6PU78lyp
+         oZADr/kw7e1NGaaylApT5g9KRNSToqLDsQ+8T1J21BfNm5BdqbH8xEyMoXaVdNzxRZcS
+         C2Qttr+Q/AfRuanW9bLFN3gDZnBe6uh+l+Ie9CVHCKkDvrY0AvXrZtfO/vhxKU6dMvR6
+         tcT4cOm6NeQdKqyoESj8TfR4gw9PP4H5Zw8zpNELvtFdLPlgEB50/sL6QxjJzZ8rBelE
+         hll87Pu4+svmUeUBSCH0dRmGa2hvEMhLPDslbkYA82QSpu0cAfLTDZxfZXlSlVtGLlKg
+         2iVQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@bcp.com.pe header.s=secure header.b=DjzsArk4;
+       spf=pass (google.com: domain of banco_de_credito_bcp@bcp.com.pe designates 216.244.162.228 as permitted sender) smtp.mailfrom=banco_de_credito_bcp@bcp.com.pe;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=bcp.com.pe
+Return-Path: <banco_de_credito_bcp@bcp.com.pe>
+Received: from bcpmx4.credito.bcp.com.pe (mx15.bcp.com.pe. [216.244.162.228])
+        by mx.google.com with ESMTPS id f8si3330300vsq.334.2021.06.04.10.54.00
+        for <jose.gabriel.gonzales.ramos@gmail.com>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 04 Jun 2021 10:54:02 -0700 (PDT)
+Received-SPF: pass (google.com: domain of banco_de_credito_bcp@bcp.com.pe designates 216.244.162.228 as permitted sender) client-ip=216.244.162.228;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@bcp.com.pe header.s=secure header.b=DjzsArk4;
+       spf=pass (google.com: domain of banco_de_credito_bcp@bcp.com.pe designates 216.244.162.228 as permitted sender) smtp.mailfrom=banco_de_credito_bcp@bcp.com.pe;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=bcp.com.pe
+Date: Fri, 04 Jun 2021 10:54:02 -0700 (PDT)
+X-NAI-Header: Modified by McAfee Email Gateway (5500)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=bcp.com.pe; s=secure; t=1622829233; h=From:
+	 To:Message-ID:Subject:MIME-Version:Content-Type;
+	bh=4rgG2YUOygtiHhYQsys9haatW+CxCaj/K/XjHH
+	eTP/g=; b=DjzsArk4Ux/40TwNEI4NtduyddNEGIxXaoAabd2H
+	P36V2mQLOS2G2ocWZWLMfodszGUA1Wa/x3D5dTSw43k6xyjwes
+	HTm3G2RJ/GSy+f5hXInRaJb6RqamVo7TbeSaEWQwDiqmqGQx8q
+	T+eKYIWGGhRao7Ze3Wk52yujfCX1vyA=
+Received: from pmobankappp03 (unknown [207.79.208.247]) by bcpmx4.credito.bcp.com.pe with smtp
+	 id 0295_5eee_a2081d2f_f4e2_4cc6_8cc5_a532ab38505f;
+	Fri, 04 Jun 2021 12:53:43 -0500
+From: =?ISO-8859-1?Q?Banca_M=F3vil_BCP?= <banco_de_credito_bcp@bcp.com.pe>
+To: jose.gabriel.gonzales.ramos@gmail.com
+Message-ID: <1455997369.7315392.1622829223936.JavaMail.APBMPRO@pmobankappp03>
+Subject: ENVIO AUTOMATICO - CONSTANCIA DE PAGO DE SERVICIO- BANCA MOVIL BCP
+MIME-Version: 1.0
+Content-Type: multipart/mixed; 
+	boundary="----=_Part_7315391_-1530425418.1622829223936"
+
+------=_Part_7315391_-1530425418.1622829223936
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+ Constancia de Pago - BCP<br><br> Credim=E1s: xxxx-xxxx-xxxx-5362 <br> Titu=
+lar: GONZALES RAMOS JOSE GABRIEL                                           =
+                              <br> Fecha y hora: 04/06/2021 12:53    <br> N=
+=FAmero de operaci=F3n: 84511391  <br> Servicio: CREDITO EDUCATIVO LIMA    =
+    <br> Empresa: TECSUP LIMA                             <br> Titular del =
+Servicio: GONZALES RAMOS  JOSE GABRIEL            <br><br><br> Pago desde: =
+Ahorro soles 191-91429121-0-45                    <br> Monto total: S/ 815.=
+00                     <br><br> Comisi=F3n: S/ 0.00             <br><br> Ti=
+po de cambio: S/ 0.00   <br> Monto pagado al cambio: US$ 0.00              =
+        <br> C=F3digo de usuario: 107392              <br><br> <br>Si desea=
+s verificar la operaci=F3n, puedes hacerlo en nuestra Banca por Internet V=
+=EDaBCP, en nuestro servicio Banca por Tel=E9fono 01311-9898, en la red de =
+Cajeros Autom=E1ticos o en cualquiera de nuestras oficinas a nivel nacional=
+.
+------=_Part_7315391_-1530425418.1622829223936--

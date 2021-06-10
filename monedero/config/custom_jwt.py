@@ -15,5 +15,10 @@ def manejo_error_JWT(error):
         respuesta["message"] = "Se necesita una token para esta peticion"
     elif error.error == 'Bad Request':
         respuesta["message"] = "Credenciales invalidas"
-
+    elif error.description == 'Signature has expired':    
+        respuesta["message"] = "Token expiró"
+    elif error.description == 'Signature verification failed':    
+        respuesta["message"] = "Token invalida"
+    elif error.description == 'Unsupported authorization type':
+        respuesta["message"] = "Debe de mandar con el prefijo JWT"
     return respuesta, error.status_code   
