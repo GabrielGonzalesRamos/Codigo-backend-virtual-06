@@ -13,3 +13,24 @@ class MovimientoModel(base_de_datos.Model):
     movimientoImagen = Column(name='imagen', type_=types.Text, nullable=False)
     moviemientoTipo = Column(name='tipo', type_=types.String(45), nullable=False)
     usuario = Column(ForeignKey(column='usuarios.id', ondelete="CASCADE"),name='usuario_id', type_=types.Integer, nullable=False)
+
+    def __init__(self, nombre, monto, fecha, imagen, tipo, usuario):
+        self.movimientoNombre = nombre
+        self.movimientoMonto = monto
+        self.movimientoFecha = fecha
+        self.movimientoImagen = imagen
+        self.moviemientoTipo = tipo
+        self.usuario = usuario
+
+    def save(self):
+        base_de_datos.session.add(self)
+        base_de_datos.session.commit()
+
+    def json(self): return { 
+        "movimientoId": self.movimientoId, 
+        "movimientoNombre": self.movimientoNombre, 
+        "movimientoMonto": self.movimientoMonto, 
+        "movimientoFecha": str(self.movimientoFecha), 
+        "movimientoImagen": self.movimientoImagen, 
+        "moviemientoTipo": self.moviemientoTipo, 
+        }
