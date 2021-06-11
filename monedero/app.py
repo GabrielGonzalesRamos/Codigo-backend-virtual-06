@@ -1,9 +1,9 @@
 from datetime import timedelta
 import uuid
 from controllers.movimiento import MovimientosController
-from flask import Flask, app, request
+from flask import Flask, app, request, send_file
 from dotenv import load_dotenv
-from os import environ, path
+from os import environ, path, remove
 from config.conexion_bd import base_de_datos
 from flask_restful import Api
 from controllers.usuario import RegistroController
@@ -77,12 +77,37 @@ def subir_archivo():
         archivo.save(path.join("multimedia", nombre_archivo))
         return {
             "message": 'Archivo guardado exitosamente' ,
+            "content": request.host_url+'media/'+nombre_archivo,
             "success": True
             }, 201
     return {
         "message": 'El archivo no esta permitido only %s' %(EXTENSIONES_PERMITIDAS),
         "success": False
     }, 400
+@app.route("/media/<string:nombre>", methods=['GET'])
+def devolver_archivo(nombre):
+    try:
+        return send_file(path.join("multimedia", nombre))
+    except:     
+        return send_file(path.join("multimedia", "not-found.png")), 404
+
+@app.route("/eliminarArchivo/<string:nombre>", methods=['DELETE'])
+def eliminar_archivo(nombre):
+    try:
+        remove(path.join("multimedia", nombre))
+        return {
+            "success": True,
+            "content": None,
+            "message": 'Archivo eliminado exitosamente'
+        }, 201
+    except:
+        return {
+            "success": False,
+            "content": None,
+            "message": 'El archivo no esta o ya se eliminó'
+        }, 404
+    
+           
 
 api.add_resource(RegistroController, "/registro")
 api.add_resource(MovimientosController, "/movimientos")
