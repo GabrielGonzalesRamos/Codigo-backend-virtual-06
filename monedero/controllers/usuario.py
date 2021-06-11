@@ -1,3 +1,4 @@
+from config.conexion_bd import base_de_datos
 from flask_restful import Resource, reqparse
 from sqlalchemy.sql import expression
 from sqlalchemy.exc import IntegrityError
@@ -60,20 +61,39 @@ class ForgotPasswordController(Resource):
 
     def post(self):
         data = self.serializer.parse_args()
+        patron_correo = '^[a-zA-Z0-9]+[\._]?[a-zA-Z0-9]+[@]\w+[.]\w{2,3}$'
         correo = data['correo']
-        # inicio mi objeto Fernet con la clave definida en mi variable de entorno
-        fernet = Fernet(environ.get("FERNET_SECRET"))
-        # El metodo dumps convierte un diccionario a un json 
-        payload = {
-            "fecha_caducidad": str(datetime.now() + timedelta(minutes=30)),
-            "correo": correo 
-        }
-        print(payload)
-        # El metodo dumps convierte en un diccionario a un json
-        payload_json = json.dumps(payload)
-        # Encripto este payload a un hash listo para mandarlo por el correo
-        token = fernet.encrypt(bytes(payload_json, 'utf-8'))
-        print(token)
-        return 'ok'
+        if fullmatch(patron_correo, correo):
+            if base_de_datos.session.query(UsuarioModel).filter_by(usuarioCorreo=correo).first():
+                # inicio mi objeto Fernet con la clave definida en mi variable de entorno
+                fernet = Fernet(environ.get("FERNET_SECRET"))
+                # El metodo dumps convierte un diccionario a un json 
+                payload = {
+                    "fecha_caducidad": str(datetime.now() + timedelta(minutes=30)),
+                    "correo": correo 
+                    }
+                print(payload)
+                # El metodo dumps convierte en un diccionario a un json
+                payload_json = json.dumps(payload)
+                # Encripto este payload a un hash listo para mandarlo por el correo
+                token = fernet.encrypt(bytes(payload_json, 'utf-8'))
+                print(token)
+                return {
+                    "succes": True,
+                    "content": None,
+                    "message": "Revise su bandeja de entrada"
+                    }, 201
+            else:
+                return {
+                    "succes": False,
+                    "content": None,
+                    "message": "El correo no se encuentra registrado en nuestro sistema"
+                    }, 403
+        else:
+            return {
+                "succes": False,
+                "content": None,
+                "message": "El dato enviado no es un correo"
+            }, 403
 
         
