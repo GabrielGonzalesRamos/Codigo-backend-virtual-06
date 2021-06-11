@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from os import environ, path, remove
 from config.conexion_bd import base_de_datos
 from flask_restful import Api
-from controllers.usuario import RegistroController
+from controllers.usuario import RegistroController, ForgotPasswordController
 from controllers.movimiento import MovimientosController
 from models.sesion import SesionModel
 from flask_jwt import JWT
@@ -20,12 +20,12 @@ from uuid import uuid4
 
 load_dotenv()
 
-
+UPLOAD_FOLDER = 'multimedia'
 app = Flask(__name__)
 print(environ.get("DATABASE_URI"))
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("DATABASE_URI")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = 'claveSecreta'
+app.config['SECRET_KEY'] = environ.get('JWT_SECRET')
 # Para modificar la fecha de caducidad de la token, su valor por defecto es 5 minutos
 #app.config['JWT_EXPIRATION_DELTA'] = timedelta(minutes=1, seconds=10)
 app.config['JWT_EXPIRATION_DELTA'] = timedelta(hours=1)
@@ -74,7 +74,7 @@ def subir_archivo():
 
         # Acá validará que  no existan caracteres especiales que puedan romper el funcionamiento de mi api
         archivo.filename = secure_filename(archivo.filename)
-        archivo.save(path.join("multimedia", nombre_archivo))
+        archivo.save(path.join(UPLOAD_FOLDER, nombre_archivo))
         return {
             "message": 'Archivo guardado exitosamente' ,
             "content": request.host_url+'media/'+nombre_archivo,
@@ -87,14 +87,14 @@ def subir_archivo():
 @app.route("/media/<string:nombre>", methods=['GET'])
 def devolver_archivo(nombre):
     try:
-        return send_file(path.join("multimedia", nombre))
+        return send_file(path.join(UPLOAD_FOLDER, nombre))
     except:     
-        return send_file(path.join("multimedia", "not-found.png")), 404
+        return send_file(path.join(UPLOAD_FOLDER, "not-found.png")), 404
 
 @app.route("/eliminarArchivo/<string:nombre>", methods=['DELETE'])
 def eliminar_archivo(nombre):
     try:
-        remove(path.join("multimedia", nombre))
+        remove(path.join(UPLOAD_FOLDER, nombre))
         return {
             "success": True,
             "content": None,
@@ -111,8 +111,7 @@ def eliminar_archivo(nombre):
 
 api.add_resource(RegistroController, "/registro")
 api.add_resource(MovimientosController, "/movimientos")
-
-
+api.add_resource(ForgotPasswordController, "/olvidopassword")
 
 if __name__ == '__main__':
     app.run(debug=True)

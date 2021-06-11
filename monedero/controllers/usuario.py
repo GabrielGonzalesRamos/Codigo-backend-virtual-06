@@ -3,6 +3,12 @@ from sqlalchemy.sql import expression
 from sqlalchemy.exc import IntegrityError
 from models.usuario import UsuarioModel
 from re import fullmatch, search
+from cryptography.fernet import Fernet
+from os import environ
+from dotenv import load_dotenv
+import json 
+from datetime import date, datetime, timedelta
+load_dotenv()
 
 class RegistroController(Resource):
     serializer = reqparse.RequestParser(bundle_errors=True)
@@ -47,3 +53,27 @@ class RegistroController(Resource):
                 "content": None,
                 "message": "Contraseña  o el Correo no cumple con nuestra políticas"
             }, 400
+
+class ForgotPasswordController(Resource):
+    serializer = reqparse.RequestParser(bundle_errors=True)
+    serializer.add_argument("correo", type=str, required=True, location='json', help='Falta el correo')
+
+    def post(self):
+        data = self.serializer.parse_args()
+        correo = data['correo']
+        # inicio mi objeto Fernet con la clave definida en mi variable de entorno
+        fernet = Fernet(environ.get("FERNET_SECRET"))
+        # El metodo dumps convierte un diccionario a un json 
+        payload = {
+            "fecha_caducidad": str(datetime.now() + timedelta(minutes=30)),
+            "correo": correo 
+        }
+        print(payload)
+        # El metodo dumps convierte en un diccionario a un json
+        payload_json = json.dumps(payload)
+        # Encripto este payload a un hash listo para mandarlo por el correo
+        token = fernet.encrypt(bytes(payload_json, 'utf-8'))
+        print(token)
+        return 'ok'
+
+        
