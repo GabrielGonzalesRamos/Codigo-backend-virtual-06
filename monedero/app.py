@@ -1,12 +1,13 @@
 from datetime import timedelta
+import json
 import uuid
 from controllers.movimiento import MovimientosController
-from flask import Flask, app, request, send_file
+from flask import Flask, app, request, send_file, render_template # Con el metodo render_template puedo cargar plantillas
 from dotenv import load_dotenv
 from os import environ, path, remove
 from config.conexion_bd import base_de_datos
 from flask_restful import Api
-from controllers.usuario import RegistroController, ForgotPasswordController
+from controllers.usuario import RegistroController, ForgotPasswordController, ResetPasswordController
 from controllers.movimiento import MovimientosController
 from models.sesion import SesionModel
 from flask_jwt import JWT
@@ -16,12 +17,15 @@ from config.custom_jwt import manejo_error_JWT
 # Especiales que puedan malograr el funcionamiento de la api o guardar de una forma incorrecta
 from werkzeug.utils import secure_filename
 from uuid import uuid4
-
+from flask_cors import CORS
+from cryptography.fernet import Fernet
+from datetime import datetime
 
 load_dotenv()
 
 UPLOAD_FOLDER = 'multimedia'
 app = Flask(__name__)
+CORS(app=app)
 print(environ.get("DATABASE_URI"))
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("DATABASE_URI")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -106,12 +110,40 @@ def eliminar_archivo(nombre):
             "content": None,
             "message": 'El archivo no esta o ya se eliminó'
         }, 404
-    
+
+@app.route("/", methods=['GET'])
+def inicio():
+    return render_template('vencido.jinja', mensaje='Retornando desde el PY', texto='Yo soy otro texto')
            
+@app.route("/recuperarPassword/<string:token>")
+def recuperar_password(token):
+    print('Este es el token: ', token)
+    fernet = Fernet(environ.get("FERNET_SECRET"))
+    # decrypt(b'token')
+    # El metodo decrypt recibe una token pero en formato bytes y luego si es que cumple 
+    # tendŕá que convertirlo a string usamos el metodo decode
+    try:
+        respuesta = fernet.decrypt(bytes(token, 'utf-8')).decode('utf-8')
+        # La variable respuesta es un string
+        # El metodo loads convierte un json a un diccionario
+        print('Este token es desencriptado : ', respuesta)
+        respuesta_diccionario = json.loads(respuesta)
+        fecha_caducidad = datetime.strptime(respuesta_diccionario['fecha_caducidad'], '%Y-%m-%d %H:%M:%S.%f')
+        print(respuesta_diccionario)
+        if fecha_caducidad > datetime.now():
+            return 'ok'
+            
+        else:
+            return render_template('bad_token.jinja')        
+    except Exception as e:
+        print(e)
+        return render_template('bad_token.jinja')
+
+
 
 api.add_resource(RegistroController, "/registro")
 api.add_resource(MovimientosController, "/movimientos")
 api.add_resource(ForgotPasswordController, "/olvidopassword")
-
+api.add_resource(ResetPasswordController, "/reset-password")
 if __name__ == '__main__':
     app.run(debug=True)

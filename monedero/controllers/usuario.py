@@ -10,7 +10,15 @@ from dotenv import load_dotenv
 import json 
 from datetime import date, datetime, timedelta
 from utils.enviar_correo_puro import enviarCorreo
+import bcrypt
+
 load_dotenv()
+
+
+
+PATRON_CORREO = '^[a-zA-Z0-9]+[\._]?[a-zA-Z0-9]+[@]\w+[.]\w{2,3}$'
+PATRON_PASSWORD = '^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$'
+
 
 class RegistroController(Resource):
     serializer = reqparse.RequestParser(bundle_errors=True)
@@ -28,12 +36,10 @@ class RegistroController(Resource):
         # [@] => que luego si o si tiene que haber un arroba
         # \w => coincida con cualquier caracter alfanumerico
         # [.] => luego si o si tiene que haber un . 
-        patron_correo = '^[a-zA-Z0-9]+[\._]?[a-zA-Z0-9]+[@]\w+[.]\w{2,3}$'
-        patron_password = '^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$'
         nombre = data.get('nombre')
         apellido = data.get('apellido')
         password = data.get('password')
-        if search(patron_correo, correo) and fullmatch(patron_password, password):
+        if search(PATRON_CORREO, correo) and fullmatch(PATRON_PASSWORD, password):
             try:
                 nuevoUsuario = UsuarioModel(nombre, apellido, correo, password)
                 nuevoUsuario.save()
@@ -62,9 +68,8 @@ class ForgotPasswordController(Resource):
 
     def post(self):
         data = self.serializer.parse_args()
-        patron_correo = '^[a-zA-Z0-9]+[\._]?[a-zA-Z0-9]+[@]\w+[.]\w{2,3}$'
         correo = data['correo']
-        if search(patron_correo, correo):
+        if search(PATRON_CORREO, correo):
             usuario = base_de_datos.session.query(UsuarioModel).filter_by(usuarioCorreo=correo).first()
             if usuario:
                 # inicio mi objeto Fernet con la clave definida en mi variable de entorno
@@ -101,3 +106,37 @@ class ForgotPasswordController(Resource):
             }, 403
 
         
+class ResetPasswordController(Resource):
+    serializer = reqparse.RequestParser(bundle_errors=True)
+    serializer.add_argument("correo", type=str, required=True, location='json', help='Falta el correo')
+    serializer.add_argument( 'password', type=str, required=True, help="Ingrese su password", location='json')
+    def post(self):
+        data = self.serializer.parse_args()
+        if search(PATRON_CORREO, data['correo']):
+            usuario = base_de_datos.session.query(UsuarioModel).filter_by(usuarioCorreo=data['correo']).first()
+            if usuario:
+                if fullmatch(PATRON_PASSWORD, data['password']):
+                    print(usuario.usuarioPassword)
+                    passwordBytes = bytes(data['password'], "utf-8")
+                    passwordHash = bcrypt.hashpw(passwordBytes, bcrypt.gensalt())
+                    passwordString = passwordHash.decode("utf-8")
+                    usuario.usuarioPassword = passwordString
+                    print(usuario.usuarioPassword)
+                    usuario.save()
+                    return {
+                        "success": False,
+                        "content": usuario.json(),
+                        "message": "La contraseña se actulizó exitosamente"
+                    }
+                else:
+                    return {
+                        "success": False,
+                        "content": None,
+                        "message": "La contraseña debe de tener al menos 6 caracteres, una mayuscula, un numero y un caracter especial"
+                    }
+            else:
+                return {
+                    "succes": False,
+                    "content": None,
+                    "message": "El dato enviado no es un correo"
+                    }, 403

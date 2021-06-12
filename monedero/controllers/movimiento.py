@@ -23,7 +23,6 @@ class MovimientosController(Resource):
             # strptime : Convierte de un string a una fecha mediante un formato 
             # strftime : Convierte de una fecha a un string
             fecha = datetime.strptime(data['fecha'], '%Y-%m-%d %H:%M:%S')
-
         except:
             return {
                 "success": False,
@@ -33,9 +32,9 @@ class MovimientosController(Resource):
         nuevoMovimiento = MovimientoModel(data['nombre'], data['monto'], fecha , data['imagen'], data['tipo'], current_identity.get('usuarioId'))
         nuevoMovimiento.save()
         return {
-         "success": True,
-                "content": nuevoMovimiento.json(),
-                "message": 'Movimiento registrado exitosamente'
+            "success": True,
+            "content": nuevoMovimiento.json(),
+            "message": 'Movimiento registrado exitosamente'
             }, 201   
 
     def get(self):
