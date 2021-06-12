@@ -1,5 +1,5 @@
 from config.conexion_bd import base_de_datos
-from flask_restful import Resource, reqparse
+from flask_restful import Resource, reqparse, request
 from sqlalchemy.sql import expression
 from sqlalchemy.exc import IntegrityError
 from models.usuario import UsuarioModel
@@ -9,6 +9,7 @@ from os import environ
 from dotenv import load_dotenv
 import json 
 from datetime import date, datetime, timedelta
+from utils.enviar_correo_puro import enviarCorreo
 load_dotenv()
 
 class RegistroController(Resource):
@@ -63,8 +64,9 @@ class ForgotPasswordController(Resource):
         data = self.serializer.parse_args()
         patron_correo = '^[a-zA-Z0-9]+[\._]?[a-zA-Z0-9]+[@]\w+[.]\w{2,3}$'
         correo = data['correo']
-        if fullmatch(patron_correo, correo):
-            if base_de_datos.session.query(UsuarioModel).filter_by(usuarioCorreo=correo).first():
+        if search(patron_correo, correo):
+            usuario = base_de_datos.session.query(UsuarioModel).filter_by(usuarioCorreo=correo).first()
+            if usuario:
                 # inicio mi objeto Fernet con la clave definida en mi variable de entorno
                 fernet = Fernet(environ.get("FERNET_SECRET"))
                 # El metodo dumps convierte un diccionario a un json 
@@ -78,11 +80,13 @@ class ForgotPasswordController(Resource):
                 # Encripto este payload a un hash listo para mandarlo por el correo
                 token = fernet.encrypt(bytes(payload_json, 'utf-8'))
                 print(token)
-                return {
-                    "succes": True,
-                    "content": None,
-                    "message": "Revise su bandeja de entrada"
-                    }, 201
+                link = request.host_url+'recuperarPassword/'+token.decode('utf-8')
+                if enviarCorreo(usuario.usuarioCorreo, usuario.usuarioNombre, link):
+                    return {
+                        "succes": True,
+                        "content": None,
+                        "message": "Ingrese a la siguiente URL {}".format(link)
+                        }, 201
             else:
                 return {
                     "succes": False,
