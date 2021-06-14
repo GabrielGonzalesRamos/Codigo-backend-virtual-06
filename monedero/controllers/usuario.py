@@ -90,7 +90,7 @@ class ForgotPasswordController(Resource):
                     return {
                         "succes": True,
                         "content": None,
-                        "message": "Ingrese a la siguiente URL {}".format(link)
+                        "message": "Revise su bandeja de entrada"
                         }, 201
             else:
                 return {
@@ -124,7 +124,7 @@ class ResetPasswordController(Resource):
                     print(usuario.usuarioPassword)
                     usuario.save()
                     return {
-                        "success": False,
+                        "success": True,
                         "content": usuario.json(),
                         "message": "La contraseña se actulizó exitosamente"
                     }
@@ -132,7 +132,7 @@ class ResetPasswordController(Resource):
                     return {
                         "success": False,
                         "content": None,
-                        "message": "La contraseña debe de tener al menos 6 caracteres, una mayuscula, un numero y un caracter especial"
+                        "message": "La contraseña debe de tener al menos 6 caracteres , una mayus, una minus, un numero y un caracter especial"
                     }
             else:
                 return {

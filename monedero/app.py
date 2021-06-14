@@ -113,7 +113,7 @@ def eliminar_archivo(nombre):
 
 @app.route("/", methods=['GET'])
 def inicio():
-    return render_template('vencido.jinja', mensaje='Retornando desde el PY', texto='Yo soy otro texto')
+    return render_template('base.jinja', mensaje='Retornando desde el PY', texto='Yo soy otro texto')
            
 @app.route("/recuperarPassword/<string:token>")
 def recuperar_password(token):
@@ -131,8 +131,8 @@ def recuperar_password(token):
         fecha_caducidad = datetime.strptime(respuesta_diccionario['fecha_caducidad'], '%Y-%m-%d %H:%M:%S.%f')
         print(respuesta_diccionario)
         if fecha_caducidad > datetime.now():
-            return 'ok'
-            
+            print(respuesta_diccionario['correo'])
+            return render_template('recovery_password.jinja', correo=respuesta_diccionario['correo']) 
         else:
             return render_template('bad_token.jinja')        
     except Exception as e:
