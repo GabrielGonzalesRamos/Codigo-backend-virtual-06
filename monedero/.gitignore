@@ -1,4 +1,0 @@
-.env
-models/__pycache__/
-multimedia/*
-!multimedia/not-found.png
