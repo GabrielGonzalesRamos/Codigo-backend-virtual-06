@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 from dotenv import load_dotenv
 from os import environ
+from datetime import timedelta
 
 
 
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'cms',
     'facturacion',
+    'rest_framework_simplejwt'
 ]
 
 MIDDLEWARE = [
@@ -116,7 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es'
 
 TIME_ZONE = 'UTC'
 
@@ -140,3 +142,20 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "cms.UsuarioModel"
 # Esto sirve para mostar y almacenar los archivos multimedia mediante la URL
 MEDIA_ROOT = BASE_DIR / 'media'
+# MEDIA_URL => Sirve para indicar la ruta para devolver todos los archivos multimedia almacenados en el backend 
+MEDIA_URL = '/assets/'
+
+# REST_FRAMEWORK => Sirve para definir a DRF algunas configuraciones adicionales como la paginacion, la autenticacion y execpciones
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES' : ['rest_framework_simplejwt.authentication.JWTAuthentication', ]
+}
+
+# Sirve para configurar toda la liberia de JWT
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1), # Modificación del timepo de vida del ACCESS_TOKEN
+    'REFRESH_TOKEN_LIFETIME': timedelta(hours=5),# Modificación del timepo de vida del REFRESH_TOKEN_LIFETIME
+    # 'SIGNING_KEY:  'mipassowrd' # Modifica la contraseña de la token
+    'USER_ID_FIELD': 'usuarioId' # Indica cual es el PK del modelo de autenticacion
+}
+
+
