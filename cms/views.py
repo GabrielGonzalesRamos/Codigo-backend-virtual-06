@@ -11,6 +11,9 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import AllowAny
 from rest_framework.pagination import PageNumberPagination
 import requests
+from os import environ
+from dotenv import load_dotenv
+load_dotenv()
 
 
 class PaginacionPersonalizada(PageNumberPagination):
@@ -163,16 +166,13 @@ class PedidoController(CreateAPIView):
                     url = "https://apiperu.dev/api/ruc/{}".format(data.validated_data.get('documento_cliente'))
                     print('es un dni')
                 headers = {
-                    "Authorization": "Bearer 9aaec7e41953fa1bf7389e1510ffd1cd7c01e3d3def048291fcbc3f3df063b03",
+                    "Authorization": environ.get('TOKEN'),
                     "Content-Type": "application/json"
                     }
-                try:
-                    respuesta = request.get(url=url, headers=headers)
-                    print(respuesta.ok)
-                    print(respuesta.json())
-                    print(respuesta.status_code)
-                except:
-                    print('Se cayo el servicio de consulta DNI')                    
+                respuesta = requests.get(url=url, headers=headers)
+                print(respuesta.ok)
+                print(respuesta.json())
+                print(respuesta.status_code)                 
             return Response(data={
                 "success": True,
                 "content": data.data,
