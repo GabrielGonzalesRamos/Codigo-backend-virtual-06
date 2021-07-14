@@ -5,7 +5,6 @@ export const opciones : Options = {
     dialect: "postgres",
     timezone: "-05:00",
     logging: false,
-    ssl: true, 
     dialectOptions: {
         ssl: true
     }
