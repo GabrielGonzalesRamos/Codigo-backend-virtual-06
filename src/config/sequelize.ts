@@ -6,8 +6,10 @@ export const opciones : Options = {
     timezone: "-05:00",
     logging: false,
     dialectOptions: {
-        ssl: true
-    }
+        ssl: {
+            rejectUnauthorized: false
+        },
+    },
 }
 
 export default new Sequelize( String(process.env.DATABASE_URL), opciones );
