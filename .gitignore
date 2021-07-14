@@ -1,5 +1,4 @@
-entorno_django/
-facturacion/__pycache__/
-cms/__pycache__/
-media/
-facturacion/__pycache__/
+node_modules/
+dist/
+.env
+src/credenciales-firebase.json
