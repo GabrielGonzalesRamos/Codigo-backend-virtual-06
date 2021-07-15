@@ -1,0 +1,20 @@
+{
+  "name": "cafeteria-mongoose",
+  "version": "1.0.0",
+  "description": "Proyecto en NO-SQL de una cafeteria",
+  "main": "index.js",
+  "repository": "git@github.com:pepelucho71922/Codigo-backend-virtual-06.git",
+  "author": "pepelucho71922 <jose.gonzales.r@tecsup.edu.pe>",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/mongoose": "^5.11.97",
+    "ts-node": "^10.1.0",
+    "typescipt": "^1.0.0"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.13.2"
+  }
+}
