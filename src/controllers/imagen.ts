@@ -50,3 +50,13 @@ export const subirImagen = async(req: Request, res: Response) => {
         }
     }
 }
+
+export const eliminarArchivoUtil = async(req: Request, res: Response) => {
+    const { carpeta, archivo } = req.body;
+    try{
+        await eliminarArchivoUtil(carpeta, archivo);
+        return res.json({ success: true });
+    }catch(error){
+        return res.json({ success: false });
+    }
+}

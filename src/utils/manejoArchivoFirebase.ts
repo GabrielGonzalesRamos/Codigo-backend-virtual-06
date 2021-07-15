@@ -1,13 +1,21 @@
 import { Storage } from '@google-cloud/storage';
+require('dotenv').config()
 //  Primero creo la instancia de la clase Storage con la configuración
 // de las credenciales y el id del proyecto
-const storage = new Storage({ projectId: 'zapateria-codigo-gabriel', keyFilename: './credenciales-firebase.json' });
+const storage = new Storage({ 
+    projectId: 'zapateria-codigo-gabriel',  
+    credentials: {
+        client_email: process.env.CLIENT_EMAIL_FIREBASE,
+        private_key: process.env.PRIVATE_KEY_FIREBASE?.replace(/\\n/gm, '\n')
+    }
+});
 
 // Enlazo mi bucket ( Donde se almancenará todas las imagenes)
 // Se copia el link que muestra el bucket PERO sin el protocolo gs ni el "/" del final
 const bucket = storage.bucket('zapateria-codigo-gabriel.appspot.com')
 
 export const subirArchivo = (archivo: Express.Multer.File, path: string): Promise<string> => {
+
     return new Promise(( resolve, reject ) => {
         if(!archivo){
             reject('No se encontró el archivo');

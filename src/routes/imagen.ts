@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import Multer from 'multer';
-import { subirImagen } from '../controllers/imagen';
+import { subirImagen, eliminarArchivoUtil } from '../controllers/imagen';
 
 const multer = Multer({
     storage: Multer.memoryStorage(),
@@ -19,3 +19,8 @@ imagenRouter.post('/subirImagen', multer.single('imagen'), (req: Request, res: R
         next();
     }
 } ,subirImagen);
+
+
+
+
+imagenRouter.delete('/eliminarImagen', eliminarArchivoUtil);
