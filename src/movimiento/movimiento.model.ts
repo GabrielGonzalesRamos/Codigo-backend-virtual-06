@@ -3,7 +3,7 @@ import { Schema, SchemaTypes, model } from 'mongoose';
 const detalleSchema = new Schema({
     detalleCantidad: { types: Schema.Types.Number, alias: 'cantidad' },
     detallePrecio: { types: Schema.Types.Decimal128, alias: 'precio', required: true },
-    productoId: { type: Schema.Types.ObjectId, alias: "producto_id", required: true,  }
+    productoId: { type: Schema.Types.ObjectId, alias: "producto_id", required: true,  },
 })
 
 const pasarellaSchema = new Schema({
