@@ -1,0 +1,9 @@
+POST /registro
+POST /login
+POST /cambiarPassword => Enviar una token al correo para resetear la password | usaremos handlebears
+
+POST /productos
+GET /productos PAGINATED
+PUT /productos
+DELETE /productos
+POST /movimientos

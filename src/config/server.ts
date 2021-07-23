@@ -2,6 +2,10 @@ import express from 'express';
 //import { json } from 'body-parser';
 import { json, Express, Request, Response, NextFunction } from 'express'
 import { connect } from 'mongoose';
+import { productoRouter } from '../producto/producto.routes';
+import { usuarioRouter } from '../usuario/usuario.routes';
+import { imagenRouter } from '../imagen/imagen.routes';
+import { movimientoRouter } from '../movimiento/movimiento.routes';
 require('dotenv').config();
 
 export default class Server {
@@ -27,6 +31,10 @@ export default class Server {
                 success: true,
             });
         });
+        const ubicacionProyecto = __dirname.slice(0, __dirname.search('src'))
+        console.log(ubicacionProyecto);
+        this.app.use('/assets', express.static(ubicacionProyecto + '/media'));
+        this.app.use('/api', productoRouter, usuarioRouter, imagenRouter, movimientoRouter);
     }
 
     CORS(){
@@ -42,7 +50,7 @@ export default class Server {
         this.app.listen(this.port, async()  => {
             console.log('Servidor corriendo exitosamente')
             try{
-                const resultado = await connect(String(process.env.MONGO_URL), { useNewUrlParser: true, useUnifiedTopology: true, serverSelectionTimeoutMS: 5000 });
+                const resultado = await connect(String(process.env.MONGO_URL), { useNewUrlParser: true, useUnifiedTopology: true, serverSelectionTimeoutMS: 20000, useFindAndModify: false, useCreateIndex: true });
                 console.log('Base de datos sincronizada correctamente');
             }catch(error){
                 console.log('Error al conectarse a la BD');
