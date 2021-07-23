@@ -64,7 +64,7 @@ export const crearPreferencia = async(req: Request, res: Response) => {
     })
     console.log(String(process.env.ACCESS_TOKEN_MP))
     console.log(String(process.env.INTEGRATOR_ID_MP))
-    const payload: CreatePreferencePayload = {
+    const payload: any = {
         auto_return: "approved",
         notification_url: process.env.NOTIFICATION_URL,
         back_urls: {

@@ -50,7 +50,7 @@ export default class Server {
         this.app.listen(this.port, async()  => {
             console.log('Servidor corriendo exitosamente')
             try{
-                const resultado = await connect(String(process.env.MONGO_URL), { useNewUrlParser: true, useUnifiedTopology: true, serverSelectionTimeoutMS: 20000, useFindAndModify: false, useCreateIndex: true });
+                const resultado = await connect(String(process.env.MONGO_URL_PROD), { useNewUrlParser: true, useUnifiedTopology: true, serverSelectionTimeoutMS: 20000, useFindAndModify: false, useCreateIndex: true });
                 console.log('Base de datos sincronizada correctamente');
             }catch(error){
                 console.log('Error al conectarse a la BD');
