@@ -6,6 +6,7 @@ import { configure, preferences } from 'mercadopago'
 import { CreatePreferencePayload, PreferenceItem } from "mercadopago/models/preferences/create-payload.model";
 import { Usuario } from "../usuario/usuario.model";
 import { isTemplateSpan } from "typescript";
+import fetch from "node-fetch";
 require('dotenv').config();
 
 //interface IMovimiento extends Omit<Movimiento, 'vendedorId' | 'usuarioId' | 'movimientoDetalles'> {}
@@ -201,10 +202,20 @@ export const crearPreferencia = async(req: Request, res: Response) => {
   };
 
 
-  export const mpEventos = (req: Request, res: Response) => {
+  export const mpEventos = async(req: Request, res: Response) => {
+      const { id, topic } = req.query
       console.log('BODY:-------------------------------------------');
       console.log(req.body);
       console.log('QUERY:-------------------------------------------');
+      if(topic === 'payment'){
+        const response = await fetch(
+            `https://api.mercadopago.com/v1/payments/${id}`,
+            { headers: { Authorization: process.env.ACCESS_TOKEN_MP ?? '' } }
+        )
+        const json = await response.json();
+        console.log(json.status);
+        console.log('-------------------------------------------');
+      }
       console.log(req.query);
       return res.status(200).json({});
   };
