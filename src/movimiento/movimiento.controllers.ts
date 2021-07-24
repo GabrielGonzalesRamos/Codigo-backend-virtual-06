@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { Producto } from "../producto/producto.model";
 import { RequestUser } from "../utils/validador";
 import { IMovimiento, Movimiento } from './movimiento.model'
-import { configure, preferences } from 'mercadopago'
+import { configure, payment, preferences } from 'mercadopago'
 import { CreatePreferencePayload, PreferenceItem } from "mercadopago/models/preferences/create-payload.model";
 import { Usuario } from "../usuario/usuario.model";
 import { isTemplateSpan } from "typescript";
@@ -208,15 +208,12 @@ export const crearPreferencia = async(req: Request, res: Response) => {
       console.log(req.body);
       console.log('QUERY:-------------------------------------------');
       if(topic === 'payment'){
-        const response = await fetch(
-            `https://api.mercadopago.com/v1/payments/${id}`,
-            { headers: { Authorization: process.env.ACCESS_TOKEN_MP ?? '' } }
-        )
-        const json = await response.json();
         console.log('------------ESTO ES UN PAGO----------------------')
         console.log(id)
-        console.log(json)
-        console.log(json.status);
+        const pago = await payment.get(Number(id), {
+            headers: { Authorization: `Bear ${process.env.ACCESS_TOKEN_MP ?? ''}`  }
+        })
+        console.log(pago)
         console.log('------------ESTO ES UN PAGO----------------------')
         console.log('-------------------------------------------');
       }
