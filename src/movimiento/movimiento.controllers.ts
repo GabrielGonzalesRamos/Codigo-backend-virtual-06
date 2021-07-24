@@ -214,22 +214,23 @@ export const crearPreferencia = async(req: Request, res: Response) => {
         console.log("=========================================");
         console.log("Fue un pago");
         console.log(id);
-    
         const pago = await payment.get(Number(id), {
           headers: { Authorization: `Bearer ${process.env.ACCESS_TOKEN_MP}` },
         });
         console.log("PAGO DEL PAYMENT");
     
-        const {
-          payment_method_id,
-          payment_type_id,
-          status,
-          status_detail,
-          collector_id,
-        } = pago.body;
-    
+        const { payment_method_id, payment_type_id, status, status_detail, collector_id } = pago.body;
+        const movimiento = await Movimiento.findOne({'movimientoPasarela.collectorId': collector_id});
+        let first_six_digits;
         if (payment_type_id === "credit_card" || payment_type_id === "debit_card") {
-          const { first_six_digits } = pago.body.card;
+            const { first_six_digits } = pago.body.card;
+          }
+        if(movimiento){
+            movimiento.movimientoPasarela.paymentMethodId = payment_method_id;
+            movimiento.movimientoPasarela.paymentTypeId = payment_type_id;
+            movimiento.movimientoPasarela.statusDetail = status_detail;
+            movimiento.movimientoPasarela.firstSixDigits = first_six_digits;
+            await movimiento.save();
         }
     }
       console.log(req.query);
