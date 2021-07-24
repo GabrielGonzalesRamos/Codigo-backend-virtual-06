@@ -213,7 +213,11 @@ export const crearPreferencia = async(req: Request, res: Response) => {
             { headers: { Authorization: process.env.ACCESS_TOKEN_MP ?? '' } }
         )
         const json = await response.json();
+        console.log('------------ESTO ES UN PAGO----------------------')
+        console.log(id)
+        console.log(json)
         console.log(json.status);
+        console.log('------------ESTO ES UN PAGO----------------------')
         console.log('-------------------------------------------');
       }
       console.log(req.query);
