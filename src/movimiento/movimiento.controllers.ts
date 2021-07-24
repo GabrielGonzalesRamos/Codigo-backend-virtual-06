@@ -17,6 +17,14 @@ export const crearMovimiento = async(req: RequestUser, res: Response) => {
     const vendedor = req.user._id
     const { movimientoFecha, movimientoTipo, movimientoDetalles, usuarioId }: IMovimiento = req.body;
     try{
+        const usuario = await Usuario.findById(usuarioId);
+        if(!usuario){
+            return res.json({
+                success: true,
+                content: null,
+                message: 'El usuario no existe',
+            });   
+        }
         await Promise.all(
             movimientoDetalles.map(async(detalle) => {
                 console.log(detalle.productoId);
@@ -194,7 +202,9 @@ export const crearPreferencia = async(req: Request, res: Response) => {
 
 
   export const mpEventos = (req: Request, res: Response) => {
+      console.log('BODY:-------------------------------------------');
       console.log(req.body);
+      console.log('QUERY:-------------------------------------------');
       console.log(req.query);
       return res.status(200).json({});
   };
