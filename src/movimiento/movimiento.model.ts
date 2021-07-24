@@ -8,7 +8,13 @@ interface Detalle {
 }
 
 interface Pasarella {
-    pagador?: string,
+    paymentMethodId: string,
+    paymentTypeId: string,
+    status: string,
+    statusDetail: string,
+    collectorId: string,
+    firstSixDigits?: string,
+
 }
 
 export interface IMovimiento{
@@ -27,7 +33,12 @@ const detalleSchema = new Schema<Detalle>({
 }, { _id: false })
 
 const pasarellaSchema = new Schema<Pasarella>({
-    pagador: { type: Schema.Types.String, alias: 'payer' },
+    paymentMethodId: { type: Schema.Types.String, alias: 'payment_method_id' },
+    paymentTypeId: { type: Schema.Types.String, alias: 'payment_type_id' },
+    status: { type: Schema.Types.String, alias: 'status_pasarella' },
+    statusDetail: { type: Schema.Types.String, alias: 'status_detail' },
+    collectorId: { type: Schema.Types.String, alias: 'collector_id' },
+    firstSixDigits: { type: SchemaTypes.String, alias: 'first_six_digits' }
 }, { _id: false })
 
 const movimientoSchema = new Schema({

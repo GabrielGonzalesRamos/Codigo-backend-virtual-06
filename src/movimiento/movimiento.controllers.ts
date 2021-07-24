@@ -211,10 +211,14 @@ export const crearPreferencia = async(req: Request, res: Response) => {
         console.log('------------ESTO ES UN PAGO----------------------')
         console.log(id)
         const pago = await payment.get(Number(id), {
-            headers: { Authorization: `Bear ${process.env.ACCESS_TOKEN_MP ?? ''}`  }
-        })
-        console.log(pago)
+            headers: { Authorization: `Bear ${process.env.ACCESS_TOKEN_MP}`}
+        });
+        const {payment_method_id, payment_type_id, status, status_detail, collector_id} = pago.body;
+        if(payment_type_id === 'credit_card' || payment_type_id === 'debit_card'){ 
+            const {first_six_digits} = pago.body.card 
+        }
         console.log('------------ESTO ES UN PAGO----------------------')
+        console.log(pago)
         console.log('-------------------------------------------');
       }
       console.log(req.query);
