@@ -8,11 +8,11 @@ interface Detalle {
 }
 
 interface Pasarella {
-    paymentMethodId: string,
-    paymentTypeId: string,
-    status: string,
-    statusDetail: string,
-    collectorId: string,
+    paymentMethodId?: string,
+    paymentTypeId?: string,
+    status?: string,
+    statusDetail?: string,
+    collectorId?: string,
     firstSixDigits?: string,
 
 }
@@ -23,7 +23,7 @@ export interface IMovimiento{
     usuarioId: string,
     vendedorId: string,
     movimientoDetalles: Array<Detalle>,
-    movimientoPasarela?: Pasarella,
+    movimientoPasarela: Pasarella,
 }
 
 const detalleSchema = new Schema<Detalle>({

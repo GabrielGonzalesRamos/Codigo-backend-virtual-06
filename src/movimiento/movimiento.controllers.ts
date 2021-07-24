@@ -44,7 +44,8 @@ export const crearMovimiento = async(req: RequestUser, res: Response) => {
          movimientoTipo,
          movimientoDetalles,
          usuarioId,
-         vendedorId: vendedor
+         vendedorId: vendedor,
+         movimientoPasarela: {},
      };
        const nuevoMovimiento = await Movimiento.create(movimiento);
         console.log('final');
@@ -179,6 +180,8 @@ export const crearPreferencia = async(req: Request, res: Response) => {
       );
       payload.items = items;
       const preferencia = await preferences.create(payload);
+      movimiento.movimientoPasarela.collectorId = preferencia.response.collector_id;
+      await movimiento.save();
 
 
       //console.log(movimiento);
@@ -207,20 +210,28 @@ export const crearPreferencia = async(req: Request, res: Response) => {
       console.log('BODY:-------------------------------------------');
       console.log(req.body);
       console.log('QUERY:-------------------------------------------');
-      if(topic === 'payment'){
-        console.log('------------ESTO ES UN PAGO----------------------')
-        console.log(id)
+      if (topic === "payment") {
+        console.log("=========================================");
+        console.log("Fue un pago");
+        console.log(id);
+    
         const pago = await payment.get(Number(id), {
-            headers: { Authorization: `Bear ${process.env.ACCESS_TOKEN_MP}`}
+          headers: { Authorization: `Bearer ${process.env.ACCESS_TOKEN_MP}` },
         });
-        const {payment_method_id, payment_type_id, status, status_detail, collector_id} = pago.body;
-        if(payment_type_id === 'credit_card' || payment_type_id === 'debit_card'){ 
-            const {first_six_digits} = pago.body.card 
+        console.log("PAGO DEL PAYMENT");
+    
+        const {
+          payment_method_id,
+          payment_type_id,
+          status,
+          status_detail,
+          collector_id,
+        } = pago.body;
+    
+        if (payment_type_id === "credit_card" || payment_type_id === "debit_card") {
+          const { first_six_digits } = pago.body.card;
         }
-        console.log('------------ESTO ES UN PAGO----------------------')
-        console.log(pago)
-        console.log('-------------------------------------------');
-      }
+    }
       console.log(req.query);
       return res.status(200).json({});
   };
