@@ -1,4 +1,4 @@
-import Server from './config/server';
+import Server from "./config/server";
 
 const objServer = new Server();
 
